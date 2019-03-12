@@ -51,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ServiceDiscovery _serviceDiscovery;
   CastSender _castSender;
+
+  bool connected = false;
+
   List _videoItems = [
     CastMedia(
       title: 'Chromecast video 1',
@@ -73,11 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _connectToDevice(CastDevice device) async {
     _castSender = CastSender(device);
-    bool connected = await _castSender.connect();
+    connected = await _castSender.connect();
     if (!connected) {
       // show error message...
       return;
     }
+
+
+    setState(() {
+
+    });
+
     _castSender.launch();
   }
 
@@ -124,7 +133,39 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-        body: ListView.builder(itemBuilder: _buildVideoListItem, itemCount: _videoItems.length,),
+        body: Column(
+          children: <Widget>[
+            Container(
+              height: 500.0,
+              child: ListView.builder(
+                itemBuilder: _buildVideoListItem,
+                itemCount: _videoItems.length,
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                FlatButton(child: Icon(Icons.fast_rewind), onPressed: (){
+                  _castSender.seek(-10.0);
+                },),
+                FlatButton(child: Icon(Icons.play_arrow), onPressed: (){
+                  _castSender.togglePause();
+                },),
+                FlatButton(child: Icon(Icons.stop), onPressed: (){
+                  _castSender.stop();
+                },),
+                FlatButton(child: Icon(Icons.fast_forward), onPressed: (){
+                  _castSender.seek(10.0);
+                },),
+              ],
+            ),
+            connected ? FlatButton(child: Icon(Icons.close), onPressed: (){
+              _castSender.disconnect();
+              setState(() {
+                connected = false;
+              });
+            },) : Container(),
+          ],
+        ),
       );
     });
   }

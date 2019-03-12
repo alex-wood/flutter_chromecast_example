@@ -32,7 +32,7 @@ class _DevicePickerState extends State<DevicePicker> {
     // No: not good!
     // We do want to cache the found devices...
     _devices = widget.serviceDiscovery.foundServices.map((ServiceInfo serviceInfo) {
-      return CastDevice(name: serviceInfo.name, type: serviceInfo.type, host: serviceInfo.host, port: serviceInfo.port);
+      return CastDevice(name: serviceInfo.name, type: serviceInfo.type, host: serviceInfo.hostName, port: serviceInfo.port);
     }).toList();
   }
 
