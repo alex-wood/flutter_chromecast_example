@@ -51,14 +51,24 @@ class _DevicePickerState extends State<DevicePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pick a chromecast device'),
-      ),
-      body: ListView.builder(
-        key: Key('devices-list'),
-        itemBuilder: _buildListViewItem,
-        itemCount: _devices.length,
+    return Dialog(
+      child: Container(
+        height: 200.0,
+        width: 100.0,
+        child: Column(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Pick a casting device', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),),
+          ),
+          Divider(height: 0.0, color: Colors.black,),
+          Expanded(
+            child: ListView.builder(
+              key: Key('devices-list'),
+              itemBuilder: _buildListViewItem,
+              itemCount: _devices.length,
+            ),
+          )
+        ],),
       ),
     );
   }
