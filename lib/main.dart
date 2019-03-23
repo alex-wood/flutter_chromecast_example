@@ -46,7 +46,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   ServiceDiscovery _serviceDiscovery;
   CastSender _castSender;
 
@@ -55,14 +54,17 @@ class _MyHomePageState extends State<MyHomePage> {
   List _videoItems = [
     CastMedia(
       title: 'Chrome Cast Video 1',
-      contentId: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      images: ['https://static1.squarespace.com/static/5647f7e9e4b0f54883c66275/5647f9afe4b0caa2cf189d56/56489d67e4b0734a6c410a64/1447599477357/?format=1500w'],
+      contentId:
+          'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+      images: [
+        'https://static1.squarespace.com/static/5647f7e9e4b0f54883c66275/5647f9afe4b0caa2cf189d56/56489d67e4b0734a6c410a64/1447599477357/?format=1500w'
+      ],
     ),
     CastMedia(
-      title: 'Chrome Cast Video 2',
-      contentId: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      images: ['https://i.ytimg.com/vi/dCfOxU1uFK8/maxresdefault.jpg']
-    )
+        title: 'Chrome Cast Video 2',
+        contentId:
+            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+        images: ['https://i.ytimg.com/vi/dCfOxU1uFK8/maxresdefault.jpg'])
   ];
 
   void initState() {
@@ -80,10 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-
-    setState(() {
-
-    });
+    setState(() {});
 
     //if you want to connect to your custom app, send AppID as a parameter i.e. _castSender.launch("appId")
     _castSender.launch();
@@ -121,7 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
           actions: <Widget>[
             // action button
             IconButton(
-              icon: Icon(Icons.cast),
+              icon: Icon(
+                connected ? Icons.cast_connected : Icons.cast,
+                color: Colors.white,
+              ),
               onPressed: () {
                 /*Navigator.of(context)
                     .push(new MaterialPageRoute(
@@ -133,8 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     context: context,
                     builder: (_) => DevicePicker(
                         serviceDiscovery: _serviceDiscovery,
-                        onDevicePicked: _connectToDevice)
-                );
+                        onDevicePicked: _connectToDevice));
               },
             ),
           ],
@@ -150,31 +151,60 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Row(
               children: <Widget>[
-                FlatButton(child: Icon(Icons.fast_rewind), onPressed: (){
-
-                  //rewind 10 seconds from current video position
-                  _castSender.seek(_castSender
-                      .castSession.castMediaStatus.position - 10.0);
-                },),
-                FlatButton(child: Icon(Icons.play_arrow), onPressed: (){
-                  _castSender.togglePause();
-                },),
-                FlatButton(child: Icon(Icons.stop), onPressed: (){
-                  _castSender.disconnect();
-                },),
-                FlatButton(child: Icon(Icons.fast_forward), onPressed: (){
-                  //fast forward 10 seconds from current video position
-                  _castSender.seek(_castSender
-                      .castSession.castMediaStatus.position + 10.0);
-                },),
+                FlatButton(
+                  child: Icon(Icons.fast_rewind),
+                  onPressed: () {
+                    //rewind 10 seconds from current video position
+                    _castSender.seek(
+                        _castSender.castSession.castMediaStatus.position -
+                            10.0);
+                  },
+                ),
+                FlatButton(
+                  child: Icon(Icons.play_arrow),
+                  onPressed: () {
+                    _castSender.togglePause();
+                  },
+                ),
+                FlatButton(
+                  child: Icon(Icons.stop),
+                  onPressed: () {
+                    _castSender.stop();
+                  },
+                ),
+                FlatButton(
+                  child: Icon(Icons.fast_forward),
+                  onPressed: () {
+                    //fast forward 10 seconds from current video position
+                    _castSender.seek(
+                        _castSender.castSession.castMediaStatus.position +
+                            10.0);
+                  },
+                ),
               ],
             ),
-            connected ? FlatButton(child: Icon(Icons.close), onPressed: (){
-              _castSender.disconnect();
-              setState(() {
-                connected = false;
-              });
-            },) : Container(),
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Material(
+                borderRadius: BorderRadius.circular(5.0),
+                shadowColor: Colors.lightBlueAccent.shade100,
+                elevation: 5.0,
+                child: MaterialButton(
+                  minWidth: 200.0,
+                  height: 42.0,
+                  onPressed: () {
+                    setState(() {
+                      _castSender.disconnect();
+
+                      connected = false;
+                    });
+                  },
+                  color: Colors.black,
+                  child: Text('Disconnect',
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ),
+            ),
           ],
         ),
       );
